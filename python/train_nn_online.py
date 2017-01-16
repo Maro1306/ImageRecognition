@@ -20,23 +20,23 @@ train_acc_list = []
 test_acc_list = []
 
 for i in range(iters_num):
-    mask = np.random.choice(train_size, 1)
-    x_data = x_train[mask]
-    t_data = t_train[mask]
-    
-    # 勾配の計算
-    grad = network.gradient(x_data, t_data) # 誤差逆伝搬法
-    
-    # パラメータの更新
-    for key in ('W1', 'b1', 'W2', 'b2'):
-        network.params[key] -= learning_rate * grad[key]
-    
-    if i % 1000 == 0:
-        train_acc = network.accuracy(x_train, t_train)
-        test_acc = network.accuracy(x_test, t_test)
-        train_acc_list.append(train_acc)
-        test_acc_list.append(test_acc)
-        print("train acc, test acc | " + str(train_acc) + ", " + str(test_acc))
+	mask = np.random.choice(train_size, 1)
+	x_data = x_train[mask]
+	t_data = t_train[mask]
+	
+	# 勾配の計算
+	grad = network.gradient(x_data, t_data) # 誤差逆伝搬法
+	
+	# パラメータの更新
+	for key in ('W1', 'b1', 'W2', 'b2'):
+		network.params[key] -= learning_rate * grad[key]
+	
+	if i % 1000 == 0:
+		train_acc = network.accuracy(x_train, t_train)
+		test_acc = network.accuracy(x_test, t_test)
+		train_acc_list.append(train_acc)
+		test_acc_list.append(test_acc)
+		print("train acc, test acc | " + str(train_acc) + ", " + str(test_acc))
 
 # グラフの描画
 markers = {'train': 'o', 'test': 's'}
