@@ -76,7 +76,7 @@ int sc_main(int argc, char **argv){
 
 	srand(time(NULL));
 	fprintf(fp, "plot '-' with points\n");
-	for(int i=0 ; i<100 ; i++){
+	for(int i=0 ; i<300 ; i++){
 		x_dec = (double)rand()/RAND_MAX*12.0-6.0;
 		x = (x_dec>=0 ? 0 : 262144) + dec2int(fabs(x_dec));
 		calc = 1;
