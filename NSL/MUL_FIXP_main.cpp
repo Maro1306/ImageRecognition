@@ -1,5 +1,5 @@
 #include "systemc.h"
-#include "ADDSUB.sh"
+#include "MUL_FIXP.sh"
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,7 +7,7 @@
 #define PLUS	0
 #define MINUS	1
 
-ADDSUB *as_i;
+MUL_FIXP *mul_i;
 
 sc_clock clk("clk");
 sc_signal<bool> reset("reset");
@@ -47,39 +47,39 @@ int dec2int(double x){
 	return s;
 }
 
-void exec_add(int a_sign, int b_sign){
+void exec_mul(int a_sign, int b_sign){
 	double a_dec, b_dec;
 	double answer;
-
+	
 	as = a_sign;
-	a_dec = (double)rand()/RAND_MAX*5.0;
+	a_dec = (double)rand()/RAND_MAX*3.0;
 	a = dec2int(a_dec);
 	bs = b_sign;
-	b_dec = (double)rand()/RAND_MAX*5.0;
+	b_dec = (double)rand()/RAND_MAX*3.0;
 	b = dec2int(b_dec);
 	exec = 1;
 	sc_start(1, SC_NS);
 
-	answer = (a_sign==PLUS ? 1 : -1) * a_dec + (b_sign==PLUS ? 1 : -1) * b_dec;
+	answer = (a_sign==b_sign ? 1 : -1) * a_dec * b_dec;
 
 	cout << (a_sign==PLUS ? "" : "-") << a_dec;
-	cout << (b_sign==PLUS ? " + " : " - ") << b_dec;
+	cout << " * " << (b_sign==PLUS ? "" : "-") << b_dec;
 	cout << " = " << (rs.read()==PLUS ? "" : "-") << int2dec(r.read());
 	cout << "     " << answer << "\n";
 }
 
 int sc_main(int argc, char **argv){
-	as_i = new ADDSUB("as_i");
+	mul_i = new MUL_FIXP("mul_i");
 
-	as_i->m_clock(clk);
-	as_i->p_reset(reset);
-	as_i->as(as);
-	as_i->a(a);
-	as_i->bs(bs);
-	as_i->b(b);
-	as_i->rs(rs);
-	as_i->r(r);
-	as_i->exec(exec);
+	mul_i->m_clock(clk);
+	mul_i->p_reset(reset);
+	mul_i->as(as);
+	mul_i->a(a);
+	mul_i->bs(bs);
+	mul_i->b(b);
+	mul_i->rs(rs);
+	mul_i->r(r);
+	mul_i->exec(exec);
 
 	sc_start(0, SC_NS);
 	reset = 1;
@@ -90,16 +90,17 @@ int sc_main(int argc, char **argv){
 
 	srand(time(NULL));
 
-	exec_add(PLUS, PLUS);
-	exec_add(PLUS, PLUS);
-	exec_add(PLUS, MINUS);
-	exec_add(PLUS, MINUS);
-	exec_add(MINUS, PLUS);
-	exec_add(MINUS, PLUS);
-	exec_add(MINUS, MINUS);
-	exec_add(MINUS, MINUS);
+	exec_mul(PLUS, PLUS);
+	exec_mul(PLUS, PLUS);
+	exec_mul(PLUS, MINUS);
+	exec_mul(PLUS, MINUS);
+	exec_mul(MINUS, PLUS);
+	exec_mul(MINUS, PLUS);
+	exec_mul(MINUS, MINUS);
+	exec_mul(MINUS, MINUS);
 
 	cout << "\n\n\n";
 
 	return 0;
 }
+

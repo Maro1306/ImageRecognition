@@ -1,0 +1,18 @@
+#include "MUL_FIXP.inc"
+#include "MUL.inc"
+
+#define PLUS	1'b0
+#define MINUS	1'b1
+
+module MUL_FIXP{
+	MUL mul;
+	wire result[36];
+
+	func exec{
+		result = mul.exec(a,b).r;
+		r = result[31:14];
+
+		if(result == 36'b0) rs = 0;
+		else                rs = as ^ bs;
+	}
+}
