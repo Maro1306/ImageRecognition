@@ -1,0 +1,37 @@
+#include "FIXP_OPERATION.inc"
+#include "ADD.inc"
+#include "SUB.inc"
+#include "MUL.inc"
+
+#define PLUS	1'b0
+#define MINUS	1'b1
+
+module FIXP_OPERATION{
+	ADD add;
+	SUB sub;
+	MUL mul;
+	wire result[36];
+
+	func calc_mul{
+		result = mul.exec(a,b).r;
+		r = result[31:14];
+
+		if(result == 36'b0) rs = 0;
+		else                rs = as ^ bs;
+	}
+
+	func calc_add{
+		if(as == bs){
+			add.exec(a, b);
+			.{rs, r} = {if(!add.r) PLUS else as, add.r};
+		}
+		else{
+			any{
+				(as == PLUS)  & (a < b):  .{rs, r} = {MINUS, sub.exec(b, a).r};
+				(as == PLUS)  & (a >= b): .{rs, r} = {PLUS,  sub.exec(a, b).r};
+				(as == MINUS) & (a <= b): .{rs, r} = {PLUS,  sub.exec(b, a).r};
+				(as == MINUS) & (a > b):  .{rs, r} = {MINUS, sub.exec(a, b).r};
+			}
+		}
+	}
+}

@@ -1,0 +1,7 @@
+#include "SUB.inc"
+
+module SUB{
+	func exec{
+		r = a - b;
+	}
+}

@@ -1,0 +1,7 @@
+#include "ADD.inc"
+
+module ADD{
+	func exec{
+		.{carry, r} = a + b;
+	}
+}

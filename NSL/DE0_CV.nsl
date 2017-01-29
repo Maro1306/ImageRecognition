@@ -1,0 +1,15 @@
+#include "RAM.inc"
+
+declare DE0_CV{
+	input	KEY[4];
+	input	SW[4];
+	output	LEDR[4];
+}
+
+module DE0_CV{
+	RAM ram_i;
+
+	if(KEY[0]) ram_i.write(KEY, KEY);
+	if(KEY[1]) ram_i.read(KEY);
+	LEDR = ram_i.datao;
+}

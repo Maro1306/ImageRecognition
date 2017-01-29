@@ -1,0 +1,10 @@
+#include "RAM.inc"
+
+module RAM{
+	reg dout[4];
+	mem ram[16][4];
+
+	datao = dout;
+	func read dout := ram[address];
+	func write ram[address] := datai;
+}

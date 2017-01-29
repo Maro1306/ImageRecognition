@@ -1,0 +1,7 @@
+#include "MUL.inc"
+
+module MUL{
+	func exec{
+		r = a * b;
+	}
+}
