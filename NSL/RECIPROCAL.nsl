@@ -1,0 +1,37 @@
+#include "RECIPROCAL.inc"
+#include "ADDSUB.inc"
+#include "MUL_FIXP.inc"
+
+#define PLUS	1'b0
+#define MINUS	1'b1
+
+module RECIPROCAL{
+	ADDSUB as;
+	MUL_FIXP mf[3];
+	reg a[19], xr[19];
+
+	func calc seq{
+		{
+			xr := x;
+			mf[0].exec(PLUS, 18'b0010_00000000000000, PLUS, 18'b0000_00110011001100);
+			mf[1].exec(PLUS, 18'b0000_00110011001100, PLUS, 18'b0000_00110011001100);
+			mf[2].exec(mf[1].rs, mf[1].r, x[18], x[17:0]);
+			as.exec(mf[0].rs, mf[0].r, mf[2].rs, mf[2].r);
+			a := {as.rs, as.r};
+		}
+		{
+			mf[0].exec(PLUS, 18'b0010_00000000000000, a[18], a[17:0]);
+			mf[1].exec(a[18], a[17:0], a[18], a[17:0]);
+			mf[2].exec(mf[1].rs, mf[1].r, xr[18], xr[17:0]);
+			as.exec(mf[0].rs, mf[0].r, mf[2].rs, mf[2].r);
+			a := {as.rs, as.r};
+		}
+		{
+			mf[0].exec(PLUS, 18'b0010_00000000000000, a[18], a[17:0]);
+			mf[1].exec(a[18], a[17:0], a[18], a[17:0]);
+			mf[2].exec(mf[1].rs, mf[1].r, xr[18], xr[17:0]);
+			as.exec(mf[0].rs, mf[0].r, mf[2].rs, mf[2].r);
+			y = {as.rs, as.r};
+		}
+	}
+}
