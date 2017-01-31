@@ -66,7 +66,7 @@ int sc_main(int argc, char **argv){
 	fprintf(fp, "set terminal png\n");
 	fprintf(fp, "set output 'reciprocal_sim_01.png'\n");
 	fprintf(fp, "set multiplot\n");
-	fprintf(fp, "set xrange [-7:7]\n");
+	fprintf(fp, "set xrange [0:10]\n");
 	fprintf(fp, "set yrange [0:1]\n");
 	fprintf(fp, "set xlabel 'x'\n");
 	fprintf(fp, "set ylabel 'y'\n");
