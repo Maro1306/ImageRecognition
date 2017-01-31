@@ -8,30 +8,53 @@
 module RECIPROCAL{
 	ADDSUB as;
 	MUL_FIXP mf[3];
-	reg a[19], xr[19];
+	reg a[19], xr[19], cnt[2];
+	wire s[18], t[18], r[19];
+	proc_name init(cnt, xr);
+	proc_name exec();
+	func_self exec_init(s, t):r;
 
-	func calc seq{
-		{
-			xr := x;
-			mf[0].exec(PLUS, 18'b0010_00000000000000, PLUS, 18'b0000_00110011001100);
-			mf[1].exec(PLUS, 18'b0000_00110011001100, PLUS, 18'b0000_00110011001100);
-			mf[2].exec(mf[1].rs, mf[1].r, x[18], x[17:0]);
-			as.exec(mf[0].rs, mf[0].r, mf[2].rs, mf[2].r);
-			a := {as.rs, as.r};
+	func calc{
+		init(count, x);
+	}
+
+	func exec_init{
+		mf[0].exec(PLUS, s, xr[18], xr[17:0]);
+		as.exec(PLUS, t, MINUS, mf[0].r);
+		r = {as.rs, as.r};
+	}
+
+	proc init{
+		alt{
+			xr[17:0] < 18'b0010_00000000000000:{
+				a := exec_init(18'b0000_01111101011100, 18'b0001_01100110011001);
+			}
+			xr[17:0] > 18'b1000_00000000000000:{
+				a := exec_init(18'b0000_00000010100011, 18'b0000_00110011001100);
+			}
+			else:{
+				a := exec_init(18'b0000_00001010001111, 18'b0000_01100110011001);
+			}
 		}
-		{
-			mf[0].exec(PLUS, 18'b0010_00000000000000, a[18], a[17:0]);
-			mf[1].exec(a[18], a[17:0], a[18], a[17:0]);
-			mf[2].exec(mf[1].rs, mf[1].r, xr[18], xr[17:0]);
-			as.exec(mf[0].rs, mf[0].r, mf[2].rs, mf[2].r);
+		cnt--;
+		exec();
+	}
+
+	proc exec{
+		// a = 2a - a^2 * x
+		mf[0].exec(PLUS, 18'b0010_00000000000000, a[18], a[17:0]);
+		mf[1].exec(a[18], a[17:0], a[18], a[17:0]);
+		mf[2].exec(mf[1].rs, mf[1].r, xr[18], xr[17:0]);
+		as.exec(mf[0].rs, mf[0].r, MINUS, mf[2].r);
+
+		if(cnt){
 			a := {as.rs, as.r};
+			cnt--;
+			exec();
 		}
-		{
-			mf[0].exec(PLUS, 18'b0010_00000000000000, a[18], a[17:0]);
-			mf[1].exec(a[18], a[17:0], a[18], a[17:0]);
-			mf[2].exec(mf[1].rs, mf[1].r, xr[18], xr[17:0]);
-			as.exec(mf[0].rs, mf[0].r, mf[2].rs, mf[2].r);
-			y = {as.rs, as.r};
+		else{ 
+			y = {as.rs, as.r};	
+			finish();
 		}
 	}
 }
