@@ -40,7 +40,8 @@ PMODE		= JTAG
 #SRCS		= ADD.nsl SUB.nsl ADDSUB.nsl
 #SRCS		= MUL.nsl MUL_FIXP.nsl
 #SRCS		= ADD.nsl SUB.nsl ADDSUB.nsl MUL.nsl MUL_FIXP.nsl SIGMOID.nsl
-SRCS		= ADD.nsl SUB.nsl ADDSUB.nsl MUL.nsl MUL_FIXP.nsl RECIPROCAL.nsl
+#SRCS		= ADD.nsl SUB.nsl ADDSUB.nsl MUL.nsl MUL_FIXP.nsl RECIPROCAL.nsl
+SRCS		= ADD.nsl SUB.nsl ADDSUB.nsl MUL.nsl MUL_FIXP.nsl EXP.nsl
 VFILES 		= $(SRCS:%.nsl=%.v) 
 LIBS		=
 RESULT		= result.txt
